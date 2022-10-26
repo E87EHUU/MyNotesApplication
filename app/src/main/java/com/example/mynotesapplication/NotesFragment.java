@@ -153,7 +153,7 @@ public class NotesFragment extends Fragment {
         FragmentManager fragmentManager =
                 requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.note_container, noteDetail); // замена  фрагмента
+        fragmentTransaction.add(R.id.note_container, noteDetail); // замена  фрагмента
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.commit();
     }

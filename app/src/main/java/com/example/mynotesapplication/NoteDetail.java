@@ -54,7 +54,7 @@ public class NoteDetail extends Fragment {
 
         if (arguments != null) {
 
-            int index = arguments.getInt(ARG_INDEX);
+            int index = arguments.getInt(SELECTED_NOTE);
 
 
             TextView tvTitle = view.findViewById(R.id.tvTitle);
