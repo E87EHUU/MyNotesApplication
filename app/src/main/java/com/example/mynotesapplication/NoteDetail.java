@@ -21,11 +21,6 @@ public class NoteDetail extends Fragment {
 
     static final String ARG_INDEX = "index";
     static final String SELECTED_NOTE = "note";
-    private Note note;
-
-    public NoteDetail() {
-        // Required empty public constructor
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,15 +42,8 @@ public class NoteDetail extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle arguments = getArguments();
 
-        Button buttonBack = view.findViewById(R.id.btnBack);
-        buttonBack.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().popBackStack();
-        });
-
         if (arguments != null) {
-
             int index = arguments.getInt(SELECTED_NOTE);
-
 
             TextView tvTitle = view.findViewById(R.id.tvTitle);
             tvTitle.setText(Note.getNotes()[index].getTitle());
@@ -79,14 +67,6 @@ public class NoteDetail extends Fragment {
             tvDescription.setText(Note.getNotes()[index].getTitle());
         }
     }
-
-  /* public static NoteDetail newInstance(Note note) {
-        NoteDetail fragment = new NoteDetail();
-        Bundle args = new Bundle();
-        args.putInt(SELECTED_NOTE, note);
-        fragment.setArguments(args);
-        return fragment;
-    }*/
 
     public static NoteDetail newInstance(int index) {
         NoteDetail fragment = new NoteDetail();
