@@ -76,3 +76,4 @@ public class NoteDetail extends Fragment {
         return fragment;
     }
 }
+//
