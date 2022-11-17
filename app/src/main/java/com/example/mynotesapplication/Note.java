@@ -90,7 +90,7 @@ public class Note implements Parcelable {
         this.creationDate = creationDate;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    
     @SuppressLint("DefaultLocale")
     public static Note getNote(int index){
         String title = String.format("Заметка %d", index);
@@ -110,5 +110,4 @@ public class Note implements Parcelable {
         parcel.writeString(description);
     }
 }
-//
-//
+
