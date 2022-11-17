@@ -28,7 +28,7 @@ public class NoteDetail extends Fragment {
         if (savedInstanceState != null)
             requireActivity().getSupportFragmentManager().popBackStack();
     }
-
+//
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

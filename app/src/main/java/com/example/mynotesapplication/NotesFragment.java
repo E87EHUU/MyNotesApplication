@@ -102,7 +102,7 @@ public class NotesFragment extends Fragment {
     }*/
 
     private void showNoteDetails(int index){
-        //selectedIndex = index;
+
         if (isLandscape()) {
             showLandNoteDetails(index);
         } else {
@@ -121,30 +121,9 @@ public class NotesFragment extends Fragment {
         fragmentTransaction.addToBackStack("");
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.commit();
-
-        /*Activity activity = requireActivity();
-        final Intent intent = new Intent(activity, NoteActivity.class);
-        intent.putExtra(SELECTED_NOTE, note);
-        activity.startActivity(intent);*/
-
-        /*NoteDetail noteDetail = NoteDetail.newInstance();
-        FragmentManager fragmentManager =
-                requireActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.notes_container, noteDetail); // замена  фрагмента
-        fragmentTransaction.addToBackStack("");
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.commit();*/
     }
 
-    /*private void showLandNoteDetails(Note note) {
-        NoteDetail noteFragment = NoteDetail.newInstance(note);
-        FragmentManager fragmentManager =
-                requireActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.note_container, noteFragment); // замена  фрагмента
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.commit();*/
+
 
 
 
