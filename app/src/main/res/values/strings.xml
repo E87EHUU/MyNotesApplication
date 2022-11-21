@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">MyNotesApplication</string>
     <string name="back">back</string>
+    <string name="about">О программе</string>
+    <string name="exit">exit</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about_program">О программе ...</string>
 </resources>
