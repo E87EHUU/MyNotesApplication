@@ -18,43 +18,19 @@ public class Note implements Parcelable {
     private static Note[] notes;
     private static int counter;
 
-    public static int getCounter() {
-        return counter;
-    }
 
-   // private int id;
+    private int id;
     private String title;
     private String description;
     private LocalDateTime creationDate;
 
-    /*public int getId(){
+
+    public int getId() {
         return id;
-    }*/
-
-
-    protected Note(Parcel in) {
-        title = in.readString();
-        description = in.readString();
     }
-
-    public static final Creator<Note> CREATOR = new Creator<Note>() {
-        @Override
-        public Note createFromParcel(Parcel in) {
-            return new Note(in);
-        }
-
-        @Override
-        public Note[] newArray(int size) {
-            return new Note[size];
-        }
-    };
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public void setDescription(String description) {
@@ -69,12 +45,20 @@ public class Note implements Parcelable {
         return notes;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public LocalDateTime getCreationDate() {
         return creationDate;
+    }
+
+    {
+        id = ++counter;
     }
 
     static {
@@ -90,13 +74,20 @@ public class Note implements Parcelable {
         this.creationDate = creationDate;
     }
 
-    
     @SuppressLint("DefaultLocale")
     public static Note getNote(int index){
         String title = String.format("Заметка %d", index);
         String description = String.format("Описание заметки %d", index);
         LocalDateTime creationDate = LocalDateTime.now().plusDays(-random.nextInt(5));
         return new Note(title, description, creationDate);
+    }
+
+
+    protected Note(Parcel parcel){
+        id = parcel.readInt();
+        title = parcel.readString();
+        description = parcel.readString();
+        creationDate = (LocalDateTime)parcel.readSerializable();
     }
 
     @Override
@@ -106,8 +97,22 @@ public class Note implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(title);
-        parcel.writeString(description);
+        parcel.writeInt(getId());
+        parcel.writeString(getTitle());
+        parcel.writeString(getDescription());
+        parcel.writeSerializable(getCreationDate());
     }
+
+    public static final Creator<Note> CREATOR = new Creator<Note>() {
+        @Override
+        public Note createFromParcel(Parcel in) {
+            return new Note(in);
+        }
+        @Override
+        public Note[] newArray(int size) {
+            return new Note[size];
+        }
+    };
+
 }
 
