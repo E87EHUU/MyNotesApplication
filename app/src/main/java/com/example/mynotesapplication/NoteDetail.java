@@ -45,10 +45,28 @@ public class NoteDetail extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        MenuItem menuItemExit = menu.findItem(R.id.action_exit);
+        inflater.inflate(R.menu.note_menu, menu);
+
+         MenuItem menuItemExit = menu.findItem(R.id.action_exit);
         if (menuItemExit != null) {
             menuItemExit.setVisible(false);
         }
+
+        MenuItem menuItemAbout = menu.findItem(R.id.action_about);
+        if (menuItemAbout != null) {
+            menuItemAbout.setVisible(false);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if (item.getItemId() == R.id.action_delete) {
+            //TODO: Удаление заметки...
+
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -71,7 +89,8 @@ public class NoteDetail extends Fragment {
         if (arguments != null) {
 
             Note paramNote = (Note)arguments.getParcelable(SELECTED_NOTE);
-            note = Arrays.stream(Note.getNotes()).filter(n -> n.getId() == paramNote.getId()).findFirst().get();
+            // note = Arrays.stream(Note.getNotes()).filter(n -> n.getId() == paramNote.getId()).findFirst().get();
+            note = Note.getNotes().stream().filter(n -> n.getId() == paramNote.getId()).findFirst().get();
 
 
 

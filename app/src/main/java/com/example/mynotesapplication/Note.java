@@ -9,13 +9,14 @@ import androidx.annotation.RequiresApi;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Random;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class Note implements Parcelable {
 
     private static final Random random = new Random();
-    private static Note[] notes;
+    private static ArrayList<Note> notes;
     private static int counter;
 
 
@@ -41,7 +42,7 @@ public class Note implements Parcelable {
         this.creationDate = creationDate;
     }
 
-    public static Note[] getNotes(){
+    public static ArrayList<Note> getNotes(){
         return notes;
     }
 
@@ -62,9 +63,9 @@ public class Note implements Parcelable {
     }
 
     static {
-        notes = new Note[10];
-        for (int i = 0; i < notes.length; i++) {
-            notes[i] = Note.getNote(i);
+        notes = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            notes.add(Note.getNote(i));
         }
     }
 

@@ -77,16 +77,16 @@ public class NotesFragment extends Fragment {
     private void initNotes(View view){
         LinearLayout layoutView = (LinearLayout) view;
         layoutView.removeAllViews();
-        for (int i = 0; i < Note.getNotes().length; i++) {
+        for (int i = 0; i < Note.getNotes().size(); i++) {
 
             TextView tv = new TextView(getContext());
-            tv.setText(Note.getNotes()[i].getTitle());
+            tv.setText(Note.getNotes().get(i).getTitle());
             tv.setTextSize(24);
             layoutView.addView(tv);
 
             final int index = i;
             tv.setOnClickListener(v -> {
-                showNoteDetails(Note.getNotes()[index]);
+                showNoteDetails(Note.getNotes().get(index));
             });
         }
     }
