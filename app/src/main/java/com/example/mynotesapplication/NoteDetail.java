@@ -1,6 +1,7 @@
 package com.example.mynotesapplication;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class NoteDetail extends Fragment {
 
@@ -34,7 +36,7 @@ public class NoteDetail extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        // setHasOptionsMenu(true);
         /* if (savedInstanceState != null)
             requireActivity().getSupportFragmentManager().popBackStack();
 
@@ -58,20 +60,30 @@ public class NoteDetail extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if (item.getItemId() == R.id.action_delete) {
             //TODO: Удаление заметки...
-
-
+            Note.getNotes().remove(note);
+            updateData();
+            if (!isLandscape())
+            requireActivity().getSupportFragmentManager().popBackStack();
+            return true;
         }
+
         return super.onOptionsItemSelected(item);
+    }
+    private boolean isLandscape () {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (savedInstanceState == null) // убирает задвоение кнопки "Удалить" в портретном режиме
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_note, container, false);
     }
 
@@ -82,6 +94,8 @@ public class NoteDetail extends Fragment {
         Bundle arguments = getArguments();
 
         Button buttonBack = view.findViewById(R.id.btnBack);
+        if (buttonBack != null)
+
         buttonBack.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().popBackStack();
         });
@@ -89,10 +103,21 @@ public class NoteDetail extends Fragment {
         if (arguments != null) {
 
             Note paramNote = (Note)arguments.getParcelable(SELECTED_NOTE);
+            if (paramNote != null) {
+                Optional<Note> selectedNote = Note.getNotes().stream().filter(n -> n.getId() == paramNote.getId()).findFirst();
+
+                /* if (selectedNote.isPresent()) {
+                    note = selectedNote.get();
+                }
+                else {
+                    note = Note.getNotes().get(0);
+                } */
+                note = selectedNote.orElseGet(() -> Note.getNotes().get(0));
+            }
+
+
             // note = Arrays.stream(Note.getNotes()).filter(n -> n.getId() == paramNote.getId()).findFirst().get();
-            note = Note.getNotes().stream().filter(n -> n.getId() == paramNote.getId()).findFirst().get();
-
-
+            // note = Note.getNotes().stream().filter(n -> n.getId() == paramNote.getId()).findFirst().get();
 
             TextView tvTitle = view.findViewById(R.id.tvTitle);
             tvTitle.setText(note.getTitle());

@@ -2,6 +2,7 @@ package com.example.mynotesapplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
@@ -15,10 +16,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initToolBar();
+
         if (savedInstanceState == null) getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.notes_container, new NotesFragment())
                 .commit();
+    }
+
+    private void initToolBar(){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     @Override
