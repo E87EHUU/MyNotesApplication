@@ -11,7 +11,9 @@
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MyNotesApplication/app/src/main/res/layout/fragment_note.xml" value="0.209375" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MyNotesApplication/app/src/main/res/layout/fragment_notes.xml" value="0.209375" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MyNotesApplication/app/src/main/res/menu/main_menu.xml" value="0.25" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MyNotesApplication/app/src/main/res/menu/menu_drawer.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MyNotesApplication/app/src/main/res/menu/note_menu.xml" value="0.209375" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MyNotesApplication/app/src/main/res/menu/notes_popup.xml" value="0.22" />
       </map>
     </option>
   </component>

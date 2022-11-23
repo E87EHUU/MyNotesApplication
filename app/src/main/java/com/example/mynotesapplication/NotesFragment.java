@@ -1,6 +1,7 @@
 package com.example.mynotesapplication;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,9 +14,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import static com.example.mynotesapplication.Note.getNotes;
@@ -85,10 +88,34 @@ public class NotesFragment extends Fragment {
             layoutView.addView(tv);
 
             final int index = i;
+            initPopupMenu(layoutView, tv, index);
             tv.setOnClickListener(v -> {
                 showNoteDetails(Note.getNotes().get(index));
             });
         }
+    }
+
+    private void initPopupMenu(LinearLayout rootview, TextView view, int index){
+        view.setOnLongClickListener(v -> {
+            Activity activity = requireActivity();
+            PopupMenu popupMenu = new PopupMenu(activity, view);
+            activity.getMenuInflater().inflate(R.menu.notes_popup, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    switch (menuItem.getItemId()){
+                        case R.id.action_popup_delete:
+                            Note.getNotes().remove(index);
+                            rootview.removeView(view);
+                            break;
+                }
+                    return true;
+                }
+            });
+            popupMenu.show();
+            return true;
+        });
     }
 
     private void showNoteDetails(Note note){
