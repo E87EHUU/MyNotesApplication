@@ -32,8 +32,12 @@ public class NotesFragment extends Fragment {
     public NotesFragment() {
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (note == null)
+            note = Note.getNotes().get(0);
+
         outState.putParcelable(SELECTED_NOTE, note);
         super.onSaveInstanceState(outState);
     }

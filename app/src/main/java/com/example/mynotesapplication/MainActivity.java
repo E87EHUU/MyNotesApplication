@@ -1,13 +1,18 @@
 package com.example.mynotesapplication;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initToolBar();
+        initToolBar(isLandscape());
 
         if (savedInstanceState == null) getSupportFragmentManager()
                 .beginTransaction()
@@ -24,9 +29,47 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    private void initToolBar(){
+    private boolean isLandscape(){
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    private void initToolBar(boolean isLandscape){
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (!isLandscape)
+        initDrawer(toolbar);
+    }
+
+    private void initDrawer(Toolbar toolbar){
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar, R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.action_drawer_about:
+                        openAboutFragment();
+                        return true;
+                    case R.id.action_drawer_exit:
+                        finish();
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void openAboutFragment(){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack("")
+                .add(R.id.notes_container, new AboutFragment())
+                .commit();
     }
 
     @Override
@@ -40,11 +83,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_about:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .addToBackStack("")
-                        .add(R.id.notes_container, new AboutFragment())
-                        .commit();
+                openAboutFragment();
                 break;
             case R.id.action_exit:
                 finish();
