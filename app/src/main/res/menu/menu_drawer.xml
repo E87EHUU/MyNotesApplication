@@ -4,6 +4,12 @@
         android:id="@+id/action_drawer_about"
         android:icon="@android:drawable/ic_menu_gallery"
         android:title="@string/about" />
+
+    <item
+        android:id="@+id/action_drawer_notification"
+        android:icon="@android:drawable/ic_menu_gallery"
+        android:title="@string/notification" />
+
     <item
         android:id="@+id/action_drawer_exit"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"

@@ -1,6 +1,8 @@
 package com.example.mynotesapplication;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -67,17 +69,26 @@ public class NoteDetail extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
         if (item.getItemId() == R.id.action_delete) {
-            //TODO: Удаление заметки...
-            Note.getNotes().remove(note);
-            note = null;
-            updateData();
-            if (!isLandscape())
-            requireActivity().getSupportFragmentManager().popBackStack();
-            //Toast.makeText(getContext(), "Заметка удалена", Toast.LENGTH_SHORT).show();
-            if(deleteToast != null)
-                deleteToast.show();
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Внимание").setMessage("Вы действительно желаете удалить заметку?")
+                            .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Note.getNotes().remove(note);
+                                    note = null;
+                                    updateData();
+                                    if (!isLandscape())
+                                        requireActivity().getSupportFragmentManager().popBackStack();
+                                    //Toast.makeText(getContext(), "Заметка удалена", Toast.LENGTH_SHORT).show();
+                                    if(deleteToast != null)
+                                        deleteToast.show();
+                                }
+                            }).setNegativeButton("Нет", null)
+                    .show();
+
+
             return true;
         }
 

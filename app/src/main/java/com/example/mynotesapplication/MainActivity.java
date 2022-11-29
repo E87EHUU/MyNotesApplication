@@ -55,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_drawer_about:
                         openAboutFragment();
                         return true;
+                    case R.id.action_drawer_notification:
+                        openNotificationFragment();
+                        return true;
                     case R.id.action_drawer_exit:
                         finish();
                         return true;
@@ -62,6 +65,14 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    private void openNotificationFragment(){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack("")
+                .add(R.id.notes_container, new NotificationFragment())
+                .commit();
     }
 
     private void openAboutFragment(){
