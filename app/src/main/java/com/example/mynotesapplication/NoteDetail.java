@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,7 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -28,6 +31,7 @@ public class NoteDetail extends Fragment {
 
     static final String SELECTED_NOTE = "note";
     private Note note;
+    private Toast deleteToast;
 
     public NoteDetail() {
         // Required empty public constructor
@@ -67,14 +71,35 @@ public class NoteDetail extends Fragment {
         if (item.getItemId() == R.id.action_delete) {
             //TODO: Удаление заметки...
             Note.getNotes().remove(note);
+            note = null;
             updateData();
             if (!isLandscape())
             requireActivity().getSupportFragmentManager().popBackStack();
+            //Toast.makeText(getContext(), "Заметка удалена", Toast.LENGTH_SHORT).show();
+            if(deleteToast != null)
+                deleteToast.show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    private Toast prepareCustomToast(View view){
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.my_toast_layout,
+                (ViewGroup) view.findViewById(R.id.toast_layout_root));
+
+        ImageView image = (ImageView) layout.findViewById(R.id.image);
+        image.setImageResource(R.drawable.ic_edit);
+        TextView text = (TextView) layout.findViewById(R.id.text);
+        text.setText("Заметка удалена!");
+        Toast toast = new Toast(getContext());
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        return toast;
+    }
+
     private boolean isLandscape () {
         return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
@@ -91,6 +116,9 @@ public class NoteDetail extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        deleteToast = prepareCustomToast(view);
+
         Bundle arguments = getArguments();
 
         Button buttonBack = view.findViewById(R.id.btnBack);
