@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,9 @@ public class NotificationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if (savedInstanceState != null)
+            requireActivity().getSupportFragmentManager().popBackStack();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_notification, container, false);
 
@@ -36,11 +40,23 @@ public class NotificationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        requireActivity().getSupportFragmentManager().setFragmentResultListener("FRAGMENT_DIALOG_RESULT",
+                getViewLifecycleOwner(), new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                        showToast(result.getString("MESSAGE"));
+                    }
+                });
+
         getView().findViewById(R.id.button_toast).setOnClickListener(v -> showToast());
 
         view.findViewById(R.id.button_snack_bar).setOnClickListener(v -> showSnackBar(view));
 
         view.findViewById(R.id.button_alert_dialog_with_view).setOnClickListener(v -> showDialogWithCustomView());
+
+        view.findViewById(R.id.button_dialog_fragment).setOnClickListener(v -> showMyDialogFragment());
+
+        view.findViewById(R.id.button_dialog_fragment_custom_view).setOnClickListener(v -> showMyCustomDialogFragment());
     }
 
     private void showToast(){
@@ -90,5 +106,16 @@ public class NotificationFragment extends Fragment {
                 })
                 .show();
    }
+
+   private void showMyDialogFragment() {
+
+        new MyDialogFragment().show(requireActivity().getSupportFragmentManager(),"MY_DIALOG");
+   }
+
+   private void showMyCustomDialogFragment(){
+        new MyCustomDialogFragment().show(requireActivity().getSupportFragmentManager(),"MY_CUSTOM_DIALOG");
+   }
+
+
 
 }
