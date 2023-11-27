@@ -1,37 +1,46 @@
 package com.example.mynotesapplication;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import static com.example.mynotesapplication.Note.getNotes;
 import static com.example.mynotesapplication.NoteDetail.SELECTED_NOTE;
 
+import com.google.android.material.snackbar.Snackbar;
+
 public class NotesFragment extends Fragment {
 
     Note note;
     View dataContainer;
-    static final String  SELECTED_INDEX = "index";
-    int selectedIndex = 0;
 
     public NotesFragment() {
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putInt(SELECTED_INDEX, selectedIndex);
+        if (note == null)
+            note = Note.getNotes().get(0);
+
+        outState.putParcelable(SELECTED_NOTE, note);
         super.onSaveInstanceState(outState);
     }
 
@@ -46,22 +55,20 @@ public class NotesFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_notes, container, false);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         if (savedInstanceState != null) {
-            selectedIndex = savedInstanceState.getInt(SELECTED_NOTE, 0);
-            //note = (Note)savedInstanceState.getSerializable(SELECTED_NOTE);
-            //note = (Note)savedInstanceState.getParcelable(SELECTED_NOTE);
+            note = (Note)savedInstanceState.getParcelable(SELECTED_NOTE);
         }
 
-        /*dataContainer = view.findViewById(R.id.data_container);
-        initNotes(dataContainer);*/
-        initNotes(view.findViewById(R.id.data_container));
+        dataContainer = view.findViewById(R.id.data_container);
+        initNotes(dataContainer);
 
         if (isLandscape()) {
-            showLandNoteDetails(selectedIndex);
+            showLandNoteDetails(note);
         }
     }
 
@@ -70,92 +77,85 @@ public class NotesFragment extends Fragment {
                 == Configuration.ORIENTATION_LANDSCAPE;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void initNotes() {
         initNotes(dataContainer);
     }
 
-    @SuppressLint("NewApi")
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void initNotes(View view){
         LinearLayout layoutView = (LinearLayout) view;
-        //layoutView.removeAllViews();
-        for (int i = 0; i < getNotes().length; i++) {
+        layoutView.removeAllViews();
+        for (int i = 0; i < Note.getNotes().size(); i++) {
 
             TextView tv = new TextView(getContext());
-            tv.setText(getNotes()[i].getTitle());
+            tv.setText(Note.getNotes().get(i).getTitle());
             tv.setTextSize(24);
             layoutView.addView(tv);
 
             final int index = i;
+            initPopupMenu(layoutView, tv, index);
             tv.setOnClickListener(v -> {
-                showNoteDetails(index);
+                showNoteDetails(Note.getNotes().get(index));
             });
         }
     }
 
-   /*private void showNoteDetails(){
+    private void initPopupMenu(LinearLayout rootview, TextView view, int index){
+        view.setOnLongClickListener(v -> {
+            Activity activity = requireActivity();
+            PopupMenu popupMenu = new PopupMenu(activity, view);
+            activity.getMenuInflater().inflate(R.menu.notes_popup, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    switch (menuItem.getItemId()){
+                        case R.id.action_popup_delete:
+                            Note.getNotes().remove(index);
+                            rootview.removeView(view);
+                            Snackbar.make(rootview,"Заметка удалена", Snackbar.LENGTH_LONG)
+                                .show();
+                            break;
+                }
+                    return true;
+                }
+            });
+            popupMenu.show();
+            return true;
+        });
+    }
+
+    private void showNoteDetails(Note note){
         this.note = note;
         if (isLandscape()) {
             showLandNoteDetails(note);
         } else {
             showPortNoteDetails(note);
         }
-    }*/
-
-    private void showNoteDetails(int index){
-        //selectedIndex = index;
-        if (isLandscape()) {
-            showLandNoteDetails(index);
-        } else {
-            showPortNoteDetails(index);
-        }
     }
 
-    private void showPortNoteDetails(int index) {
+    private void showPortNoteDetails(Note note) {
 
-        NoteDetail noteDetail = NoteDetail.newInstance(index);
-        FragmentManager fragmentManager =
-                requireActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction =
-                fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.notes_container, noteDetail);
-        fragmentTransaction.addToBackStack("");
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.commit();
-
-        /*Activity activity = requireActivity();
-        final Intent intent = new Intent(activity, NoteActivity.class);
-        intent.putExtra(SELECTED_NOTE, note);
-        activity.startActivity(intent);*/
-
-        /*NoteDetail noteDetail = NoteDetail.newInstance();
-        FragmentManager fragmentManager =
-                requireActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.notes_container, noteDetail); // замена  фрагмента
-        fragmentTransaction.addToBackStack("");
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.commit();*/
-    }
-
-    /*private void showLandNoteDetails(Note note) {
         NoteDetail noteFragment = NoteDetail.newInstance(note);
         FragmentManager fragmentManager =
                 requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.note_container, noteFragment); // замена  фрагмента
+        fragmentTransaction.add(R.id.notes_container, noteFragment); // замена  фрагмента
+        fragmentTransaction.addToBackStack("");
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.commit();*/
+        fragmentTransaction.commit();
+    }
 
-
-
-    private void showLandNoteDetails(int index) {
-        NoteDetail noteDetail = NoteDetail.newInstance(index);
+    private void showLandNoteDetails(Note note) {
+        NoteDetail noteFragment = NoteDetail.newInstance(note);
         FragmentManager fragmentManager =
                 requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.note_container, noteDetail); // замена  фрагмента
+        fragmentTransaction.replace(R.id.note_container, noteFragment);
+       // fragmentTransaction.addToBackStack("");
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.commit();
     }
 }
-
+//
