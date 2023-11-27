@@ -13,6 +13,7 @@ import androidx.fragment.app.DialogFragment;
 public class MyDialogFragment extends DialogFragment {
 
     private void showToast(String text){
+
         Toast.makeText(getContext(),text,Toast.LENGTH_SHORT).show();
     }
 
