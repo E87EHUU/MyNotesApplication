@@ -1,15 +1,17 @@
 <resources>
-    <string name="app_name">MyNotesApplication</string>
-    <string name="back">back</string>
-    <string name="about">О программе</string>
-    <string name="exit">exit</string>
+    <string name="app_name">Мои Заметки</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="about_program">О программе ...</string>
-    <string name="delete">Удалить</string>
-    <string name="delete_item">Удалить</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="notification">Уведомления</string>
+    <string name="action_notes">Заметки</string>
+    <string name="action_info">Информация</string>
+    <string name="notes_list">Заметки</string>
+    <string name="info">info</string>
+    <string name="notes_info">Информация</string>
+    <string name="about_program">Приложение наконец-то встало на нужные рельсы.</string>
+    <string name="ok">Sehr Gut</string>
+    <string name="message">Заметка</string>
+    <string name="title">Заголовок</string>
+    <string name="save">Сохранить</string>
+    <string name="action_edit">Редактировать</string>
+    <string name="action_delete">Удалить</string>
 </resources>
